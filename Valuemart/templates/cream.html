@@ -1,0 +1,142 @@
+{% load static %}
+{% load cart %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ice creams</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .odr{
+            display: inline-flex;
+        }
+        .odr1{
+            display: auto;
+            margin-right: 3rem;
+        }
+        .odr2{
+            display: auto;
+            margin-left:3rem;
+        }
+        .odrm{
+            font-size: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+
+        <div class="header-1">
+    
+            <a class="logo"><i class="fas fa-shopping-basket"></i>Value Mart</a>
+        </div>
+    
+        <div class="header-2">
+    
+            <div id="menu-bar" class="fas fa-bars"></div>
+    
+            <nav class="navbar">
+                <a href="/">home</a>
+            </nav>
+            <div class="icons">
+                <a href="/cart" class="fas fa-shopping-cart"><b>Cart</b></a>                
+                <a><b>Hey, {{user.first_name}}!!!</b></a>
+            </div>
+        </div>
+    
+    </header>
+    <section class="product" id="product">
+
+        <h1 class="heading">Ice-creams</span></h1>
+    
+        <div class="box-container">
+          {% for item in items %}
+            <div class="box">
+                <span class="discount">-3%</span>
+               
+                <img src="{{item.img.url}}" alt="">
+                <h3>{{item.name}}</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <div class="price">{{item.price|currency}}</div>
+                <div class="card-footer p-0 no-gutters">
+              
+                    {% if item|is_in_cart:request.session.cart %}
+                    <div class="odr">
+                      <form class="odr1" method="post">
+                          {% csrf_token %}
+                          <input hidden type="text" name="item" value="{{item.id}}">
+                          <input hidden type="text" name="remove" value='True'>
+                          <input type="submit" value="-" class="col-2 btn btn-block btn-secondary">
+                      </form>                
+                      <div class="odrm">{{item|cart_quantity:request.session.cart}} in cart</div>
+                      <form class="odr2" method="post">
+                          {% csrf_token %}
+                          <input hidden type="text" name="item" value="{{item.id}}">
+                          <input type="submit" value="+" class="col-2 btn btn-block btn-secondary">
+                      </form>
+                  </div> 
+                    {% else %}
+                    <form method="POST">
+                      {% csrf_token %}
+                     <input hidden type="text" name="item" value="{{item.id}}">
+                     <input style="margin-left: 9rem;" type="submit"  class="btn" value="add to cart">
+                    </form>
+                    {% endif %}
+      
+                 </div>
+            </div>
+          {% endfor %}
+        </div>
+        
+    
+    </section>
+    <hr>
+    <section class="footer">    
+            <div class="box">
+                <h3>our location</h3>
+                <div class="links">
+                    <a href="#">India</a>
+                    <a href="#">USA</a>
+                    <a href="#">France</a>
+                    <a href="#">Japan</a>
+                    <a href="#">Russia</a>
+                </div>
+            </div>
+    
+            <div class="box">
+                <h3>quick links</h3>
+                <div class="links">
+                    <a href="#">home</a>
+                    <a href="#">category</a>
+                    <a href="#">product</a>
+                    <a href="#">deal</a>
+                    <a href="#">contact</a>
+                </div>
+            </div>
+    
+            <div class="box">
+                <h3>download app</h3>
+                <div class="links">
+                    <a href="#">google play</a>
+                    <a href="#">window xp</a>
+                    <a href="#">app store</a>
+                </div>
+            </div>
+            
+        <h1 class="credit"> created by <span> ######### </span> | all rights reserved! </h1>
+    
+    </section>
+    
+</body>
+</html>
